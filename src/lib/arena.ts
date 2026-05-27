@@ -89,7 +89,15 @@ export const ARENA_MODES: ArenaMode[] = [
 - At least 5 applications
 - Two of the 5 applications must be FUNCTIONAL games
 - Ability to change wallpaper
-- A "special" feature that you decide on and document what it is & why it is special.`,
+- A "special" feature that you decide on and inside the OS document what it is & why it is special.`,
+      },
+      {
+        label: '🖥️ simple browser OS',
+        prompt: `Generate a browser OS with the following features:
+- At least 4 applications
+- One of the 4 applications must be a FUNCTIONAL game
+- Ability to change wallpaper
+- A "special" feature that you decide on and inside the OS document what it is & why it is special.`,
       },
     ],
   },
