@@ -168,8 +168,7 @@ export default function ChatPage() {
     }
 
     const parts: (
-      | { type: 'text'; text: string }
-      | { type: 'file'; url: string; mediaType: string; filename?: string }
+      { type: 'text'; text: string } | { type: 'file'; url: string; mediaType: string; filename?: string }
     )[] = [{ type: 'text', text: content }];
 
     if (images?.length) {

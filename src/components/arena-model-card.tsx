@@ -103,7 +103,7 @@ export function ArenaModelCard({ competitor, mode, model, onSkip }: ArenaModelCa
         <div className='flex h-10 items-center justify-between gap-2'>
           <div className='min-w-0 flex-1'>
             <h3
-              className='overflow-x-auto text-[clamp(1rem,1.15vw,1.5rem)] leading-tight font-semibold whitespace-nowrap [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+              className='[scrollbar-width:none] overflow-x-auto text-[clamp(1rem,1.15vw,1.5rem)] leading-tight font-semibold whitespace-nowrap [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
               title={competitor.id.split(':')[0]}
             >
               {competitor.id.split(':')[0]}
@@ -152,7 +152,7 @@ export function ArenaModelCard({ competitor, mode, model, onSkip }: ArenaModelCa
           </div>
         </div>
 
-        <div className='text-muted-foreground mt-1 flex h-7 items-center gap-2 overflow-x-auto text-xs whitespace-nowrap [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
+        <div className='text-muted-foreground mt-1 flex h-7 [scrollbar-width:none] items-center gap-2 overflow-x-auto text-xs whitespace-nowrap [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'>
           {model?.supportsThinking && <Brain className='h-3.5 w-3.5 shrink-0 text-purple-500' />}
           {model?.details?.parameter_size && <span className='shrink-0'>{model.details.parameter_size}</span>}
           {competitor.status === 'running' && <Loader2 className='h-3.5 w-3.5 shrink-0 animate-spin' />}
