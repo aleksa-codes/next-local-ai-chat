@@ -37,14 +37,7 @@ export async function POST(request: NextRequest) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
     }
 
-    const uiMessages: UIMessage[] = [
-      {
-        id: 'system',
-        role: 'system',
-        parts: [{ type: 'text', text: VOICE_SYSTEM_PROMPT }],
-      },
-      ...(messages as UIMessage[]),
-    ];
+    const uiMessages: UIMessage[] = messages as UIMessage[];
 
     const modelMessages = await convertToModelMessages(uiMessages);
 
@@ -55,6 +48,7 @@ export async function POST(request: NextRequest) {
         supportsThinking: false,
         keepAlive: provider === 'ollama' ? '5m' : undefined,
       }),
+      instructions: VOICE_SYSTEM_PROMPT,
       messages: modelMessages,
       abortSignal: request.signal,
       providerOptions: {

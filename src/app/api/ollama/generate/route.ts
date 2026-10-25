@@ -1,4 +1,4 @@
-import { convertToModelMessages, smoothStream, type UIMessage } from 'ai';
+import { smoothStream } from 'ai';
 import { createOllama, streamText } from 'ai-sdk-ollama';
 import { NextRequest } from 'next/server';
 
@@ -54,25 +54,11 @@ export async function POST(request: NextRequest) {
 
     const systemPrompt = SYSTEM_PROMPTS[mode] || SYSTEM_PROMPTS['html'];
 
-    const messages: UIMessage[] = [
-      {
-        id: 'system',
-        role: 'system',
-        parts: [{ type: 'text', text: systemPrompt }],
-      },
-      {
-        id: 'user',
-        role: 'user',
-        parts: [{ type: 'text', text: prompt }],
-      },
-    ];
-
-    const modelMessages = await convertToModelMessages(messages);
-
     const result = await streamText({
       experimental_transform: smoothStream({ chunking: 'word' }),
+      instructions: systemPrompt,
+      prompt,
       model: ollama(model, { think: supportsThinking, keep_alive: 0 }),
-      messages: modelMessages,
       abortSignal: request.signal,
     });
 

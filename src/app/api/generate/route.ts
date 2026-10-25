@@ -1,9 +1,9 @@
-import { streamText as aiStreamText, convertToModelMessages, smoothStream, type UIMessage } from 'ai';
+import { streamText as aiStreamText, smoothStream } from 'ai';
 import { streamText as ollamaStreamText } from 'ai-sdk-ollama';
 import { NextRequest } from 'next/server';
 
 import { resolveLocalAIProvider } from '@/lib/local-ai';
-import { resolveLanguageModel } from '@/lib/model-provider';
+import { resolveLanguageModel, unloadOmlxModel } from '@/lib/model-provider';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -56,31 +56,22 @@ export async function POST(request: NextRequest) {
 
     const systemPrompt = SYSTEM_PROMPTS[mode] || SYSTEM_PROMPTS['html'];
 
-    const messages: UIMessage[] = [
-      {
-        id: 'system',
-        role: 'system',
-        parts: [{ type: 'text', text: systemPrompt }],
-      },
-      {
-        id: 'user',
-        role: 'user',
-        parts: [{ type: 'text', text: prompt }],
-      },
-    ];
-
-    const modelMessages = await convertToModelMessages(messages);
-
     const streamOptions = {
       experimental_transform: smoothStream({ chunking: 'word' }),
+      instructions: systemPrompt,
+      prompt,
       model: resolveLanguageModel({
         provider,
         model,
         supportsThinking,
         keepAlive: provider === 'ollama' ? 0 : undefined,
       }),
-      messages: modelMessages,
       abortSignal: request.signal,
+      onFinish: () => {
+        if (provider === 'omlx') {
+          void unloadOmlxModel(model);
+        }
+      },
     };
 
     const result = provider === 'ollama' ? await ollamaStreamText(streamOptions) : aiStreamText(streamOptions);

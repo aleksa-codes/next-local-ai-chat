@@ -1,4 +1,3 @@
-import { convertToModelMessages, type UIMessage } from 'ai';
 import { createOllama, streamText } from 'ai-sdk-ollama';
 import { NextRequest } from 'next/server';
 
@@ -35,20 +34,10 @@ export async function POST(request: NextRequest) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
     }
 
-    const uiMessages: UIMessage[] = [
-      {
-        id: 'system',
-        role: 'system',
-        parts: [{ type: 'text', text: VOICE_SYSTEM_PROMPT }],
-      },
-      ...(messages as UIMessage[]),
-    ];
-
-    const modelMessages = await convertToModelMessages(uiMessages);
-
     const result = await streamText({
       model: ollama(model, { think: false, keep_alive: '5m' }),
-      messages: modelMessages,
+      instructions: VOICE_SYSTEM_PROMPT,
+      messages,
       abortSignal: request.signal,
     });
 
